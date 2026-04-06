@@ -30,7 +30,7 @@ st.markdown("""
         border: 2px solid #D4AF37;
         border-radius: 15px;
         overflow: hidden;
-        margin-top: 20px;
+        margin-top: 10px;
     }
     .gold-table th {
         background-color: #D4AF37;
@@ -43,6 +43,13 @@ st.markdown("""
         padding: 12px;
         background-color: rgba(0, 31, 63, 0.6);
     }
+    
+    /* Input Field Styling */
+    .stTextInput>div>div>input {
+        background-color: #001a33 !important;
+        color: #D4AF37 !important;
+        border: 1px solid #D4AF37 !important;
+    }
     </style>
     """, unsafe_allow_html=True)
 
@@ -50,7 +57,16 @@ st.markdown("""
 with st.sidebar:
     st.markdown("<h2 style='text-align: center;'>C2-EPE ACADEMY</h2>", unsafe_allow_html=True)
     st.write("---")
-    menu = st.radio("Management Menu:", ["📊 Dashboard", "📂 Student Database", "💰 Finance & Sales", "📚 GEP Content", "🤖 AI & Automation", "📈 Marketing & Strategy", "📜 Certification"])
+    menu = st.radio("Management Menu:", [
+        "📊 Dashboard", 
+        "📝 Student Enrollment", # មឺនុយថ្មី
+        "📂 Student Database", 
+        "💰 Finance & Sales", 
+        "📚 GEP Content", 
+        "🤖 AI & Automation", 
+        "📈 Marketing & Strategy", 
+        "📜 Certification"
+    ])
     st.write("---")
     st.markdown("<p style='text-align: center;'>Prepared by<br><b>CHAN Sokhoeurn, C2/DBA</b></p>", unsafe_allow_html=True)
 
@@ -70,9 +86,29 @@ if menu == "📊 Dashboard":
     fig.update_layout(paper_bgcolor='rgba(0,0,0,0)', font_color="#D4AF37")
     st.plotly_chart(fig, use_container_width=True)
 
+elif menu == "📝 Student Enrollment":
+    st.title("📝 New Student Enrollment")
+    st.write("Register new students into the C2-EPE system.")
+    
+    with st.container():
+        c1, c2 = st.columns(2)
+        with c1:
+            st.text_input("Full Name")
+            st.selectbox("Select Program", ["General English Program (GEP)", "Junior Medical Institute (JMI)"])
+        with c2:
+            st.text_input("Contact Number")
+            st.selectbox("Assigned Level", ["Beginner", "A2 Flyers Master", "B1 Intermediate", "C2 Mastery"])
+        
+        st.write("")
+        if st.button("Register Student"):
+            st.balloons()
+            st.success("Student successfully enrolled in the system!")
+
 elif menu == "📂 Student Database":
     st.title("📂 Student Database & Skill Passport")
-    st.write("Professional tracking system for C2-EPE students.")
+    
+    # Search Functionality
+    search_query = st.text_input("🔍 Search Student by Name or ID", "")
     
     # Student Data
     students = [
@@ -81,26 +117,29 @@ elif menu == "📂 Student Database":
         {"ID": "C2-003", "Name": "Davy", "Level": "B1 Intermediate", "Passport": "70%"}
     ]
     
-    # Manual HTML Table for Premium Look
-    table_html = f"""
-    <table class="gold-table">
-        <tr>
-            <th>Student ID</th>
-            <th>Name</th>
-            <th>Level</th>
-            <th>Skill Passport</th>
-        </tr>
-        {"".join([f"<tr><td>{s['ID']}</td><td>{s['Name']}</td><td>{s['Level']}</td><td>{s['Passport']}</td></tr>" for s in students])}
-    </table>
-    """
-    st.markdown(table_html, unsafe_allow_html=True)
+    # Filter Data based on Search
+    filtered_students = [s for s in students if search_query.lower() in s['Name'].lower() or search_query.upper() in s['ID']]
     
-    st.write("")
-    st.button("✨ Generate New Skill Passport")
+    # Display Table
+    if filtered_students:
+        table_html = f"""
+        <table class="gold-table">
+            <tr>
+                <th>Student ID</th>
+                <th>Name</th>
+                <th>Level</th>
+                <th>Skill Passport</th>
+            </tr>
+            {"".join([f"<tr><td>{s['ID']}</td><td>{s['Name']}</td><td>{s['Level']}</td><td>{s['Passport']}</td></tr>" for s in filtered_students])}
+        </table>
+        """
+        st.markdown(table_html, unsafe_allow_html=True)
+    else:
+        st.warning("No student found with that name or ID.")
 
 else:
     st.title(menu)
-    st.info("This section is ready for content integration.")
+    st.info("This section is under active development.")
 
 # 5. Footer
-st.markdown("<br><hr><p style='text-align: center;'>© 2026 C2-EPE ACADEMY | SYSTEM VERSION 2.4</p>", unsafe_allow_html=True)
+st.markdown("<br><hr><p style='text-align: center;'>© 2026 C2-EPE ACADEMY | SYSTEM VERSION 2.5</p>", unsafe_allow_html=True)

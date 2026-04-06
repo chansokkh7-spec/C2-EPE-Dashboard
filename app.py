@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+import plotly.express as px
 
 # 1. Theme Configuration
 st.set_page_config(page_title="C2-EPE Master System", layout="wide")
@@ -51,12 +52,6 @@ st.markdown("""
         color: #FCF6BA !important;
         font-size: 35px;
     }
-    
-    /* Table Styling */
-    .stTable {
-        background-color: #001a33;
-        border: 1px solid #D4AF37;
-    }
     </style>
     """, unsafe_allow_html=True)
 
@@ -90,15 +85,21 @@ if menu == "📊 Dashboard":
     col4.metric("AI Tasks", "154", "Automated")
     
     st.write("---")
-    st.write("### 🔑 Key Performance Indicators")
-    st.info("System is running optimally. All AI agents are online.")
     
-    # Replaced chart with a structured summary table
-    kpi_df = pd.DataFrame({
-        'Category': ['Enrollment Growth', 'Retention Rate', 'Mastery Completion', 'Courseware Progress'],
-        'Status': ['+15% Quarterly', '92%', '85 Students', '80% Total']
+    # Keeping only the Pie Chart for visual distribution
+    st.write("### 🍕 Student Levels Distribution")
+    pie_df = pd.DataFrame({
+        'Level': ['C2 Mastery', 'A2 Flyers', 'B1 Intermediate', 'Other'],
+        'Count': [85, 450, 315, 400]
     })
-    st.table(kpi_df)
+    fig_pie = px.pie(pie_df, values='Count', names='Level', 
+                     color_discrete_sequence=['#BF953F', '#D4AF37', '#8A6E2F', '#5C4033'])
+    fig_pie.update_layout(
+        paper_bgcolor='rgba(0,0,0,0)', 
+        font_color="#D4AF37",
+        legend_font_color="#D4AF37"
+    )
+    st.plotly_chart(fig_pie, use_container_width=True)
 
 # --- 2. Student Database ---
 elif menu == "📂 Student Database":
@@ -115,17 +116,10 @@ elif menu == "📂 Student Database":
 # --- 3. Finance & Sales ---
 elif menu == "💰 Finance & Sales":
     st.title("💰 Finance & Sales Tracking")
-    st.write("### 💵 Revenue Breakdown")
-    
-    # Replaced Bar chart with a clean Summary Table
-    finance_df = pd.DataFrame({
-        'Revenue Stream': ['Tuition Fees', 'GEP Book Sales (Vol 1-9)', 'Educational Consulting'],
-        'Current Month': ['$12,000', '$4,500', '$2,000'],
-        'Target': ['$10,000', '$5,000', '$1,500']
-    })
-    st.table(finance_df)
-    
-    st.success("Financial Target reached for Educational Consulting.")
+    st.write("### 📋 Quick Summary")
+    st.write("- **Tuition Fees:** $12,000")
+    st.write("- **Book Sales:** $4,500")
+    st.write("- **Consulting:** $2,000")
 
 # --- 4. GEP Content ---
 elif menu == "📚 GEP Content":

@@ -2,24 +2,23 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 
-# 1. កំណត់ការរចនាទូទៅ (Theme Settings)
+# 1. Theme Configuration
 st.set_page_config(page_title="C2-EPE Master System", layout="wide")
 
-# Custom CSS សម្រាប់អក្សរពណ៌មាស និង Branding របស់ C2-EPE
+# Custom CSS for Premium Branding (Navy Blue & Gold)
 st.markdown("""
     <style>
-    /* ផ្ទៃខាងក្រោយមេ Navy Blue */
     .stApp {
         background-color: #001f3f;
     }
     
-    /* កំណត់ឱ្យរាល់អក្សរទាំងអស់ចេញពណ៌មាស */
+    /* Global Gold Text */
     * {
         color: #D4AF37 !important;
-        font-family: 'Kantumruy Pro', sans-serif;
+        font-family: 'Arial', sans-serif;
     }
 
-    /* ចំណងជើងធំៗឱ្យមានពន្លឺមាស Gradient */
+    /* Gradient Gold Titles */
     h1, h2, h3 {
         background: linear-gradient(to right, #BF953F, #FCF6BA, #B38728, #FBF5B7, #AA771C);
         -webkit-background-clip: text;
@@ -27,7 +26,7 @@ st.markdown("""
         font-weight: bold !important;
     }
 
-    /* ការរចនាប៊ូតុងពណ៌មាស Premium */
+    /* Premium Button Style */
     .stButton>button {
         background: linear-gradient(45deg, #BF953F, #FCF6BA, #AA771C);
         color: #001f3f !important;
@@ -42,13 +41,13 @@ st.markdown("""
         transform: scale(1.02);
     }
     
-    /* ការរចនា Sidebar */
+    /* Sidebar Styling */
     [data-testid="stSidebar"] {
         background-color: #001a33;
         border-right: 2px solid #D4AF37;
     }
 
-    /* ការរចនា Card Metric */
+    /* Metric Cards Styling */
     div[data-testid="stMetricValue"] {
         color: #FCF6BA !important;
         font-size: 35px;
@@ -56,45 +55,58 @@ st.markdown("""
     </style>
     """, unsafe_allow_html=True)
 
-# 2. របារចំហៀង និងមឺនុយទាំង ៧ ផ្នែក
+# 2. Sidebar Navigation
 with st.sidebar:
     st.markdown("<h2 style='text-align: center;'>C2-EPE ACADEMY</h2>", unsafe_allow_html=True)
     st.markdown("<p style='text-align: center; color: #FCF6BA;'><i>Mastery & Excellence</i></p>", unsafe_allow_html=True)
     st.write("---")
     
-    menu = st.radio("មឺនុយគ្រប់គ្រងសំខាន់ៗ:", [
-        "📊 Dashboard (ផ្ទាំងបញ្ជាជារួម)",
-        "📂 Student Database (ទិន្នន័យសិស្ស)",
-        "💰 Finance & Sales (ចំណូល/ការលក់)",
-        "📚 GEP Content (ផលិតកម្មមេរៀន)",
-        "🤖 AI & Automation (ប្រព័ន្ធឆ្លាតវៃ)",
-        "📈 Marketing & Strategy (យុទ្ធសាស្ត្រ)",
-        "📜 Certification (សញ្ញាបត្រ/កាត)"
+    menu = st.radio("Management Menu:", [
+        "📊 Dashboard",
+        "📂 Student Database",
+        "💰 Finance & Sales",
+        "📚 GEP Content",
+        "🤖 AI & Automation",
+        "📈 Marketing & Strategy",
+        "📜 Certification"
     ])
     
     st.write("---")
     st.markdown("<p style='text-align: center;'>Prepared by<br><b>CHAN Sokhoeurn, C2/DBA</b></p>", unsafe_allow_html=True)
 
-# 3. ការបង្ហាញតាមផ្នែកនីមួយៗ
-# --- ១. Dashboard ---
-if menu == "📊 Dashboard (ផ្ទាំងបញ្ជាជារួម)":
-    st.title("🏆 C2-EPE Executive Master Dashboard")
+# 3. Content Logic
+# --- 1. Dashboard ---
+if menu == "📊 Dashboard":
+    st.title("🏆 Executive Master Dashboard")
     col1, col2, col3, col4 = st.columns(4)
-    col1.metric("សិស្សសរុប", "1,250", "+15%")
-    col2.metric("ចំណូលសរុប", "$18,500", "+8%")
+    col1.metric("Total Students", "1,250", "+15%")
+    col2.metric("Total Revenue", "$18,500", "+8%")
     col3.metric("GEP Volumes", "9 Vols", "Active")
     col4.metric("AI Tasks", "154", "Automated")
     
-    st.write("### 📈 វឌ្ឍនភាពនៃការរីកចម្រើន")
-    chart_data = pd.DataFrame({'Month': ['Jan', 'Feb', 'Mar', 'Apr'], 'Growth': [400, 600, 950, 1250]})
-    st.area_chart(chart_data.set_index('Month'))
+    st.write("---")
+    c1, c2 = st.columns(2)
+    
+    with c1:
+        st.write("### 📈 Enrollment Growth (Area Chart)")
+        growth_data = pd.DataFrame({'Month': ['Jan', 'Feb', 'Mar', 'Apr'], 'Students': [400, 600, 950, 1250]})
+        st.area_chart(growth_data.set_index('Month'))
+        
+    with c2:
+        st.write("### 🍕 Student Levels (Pie Chart)")
+        pie_df = pd.DataFrame({
+            'Level': ['C2 Mastery', 'A2 Flyers', 'B1 Intermediate', 'Other'],
+            'Count': [85, 450, 315, 400]
+        })
+        fig_pie = px.pie(pie_df, values='Count', names='Level', 
+                         color_discrete_sequence=['#BF953F', '#D4AF37', '#8A6E2F', '#5C4033'])
+        fig_pie.update_layout(paper_bgcolor='rgba(0,0,0,0)', font_color="#D4AF37")
+        st.plotly_chart(fig_pie, use_container_width=True)
 
-# --- ២. Student Database ---
-elif menu == "📂 Student Database (ទិន្នន័យសិស្ស)":
+# --- 2. Student Database ---
+elif menu == "📂 Student Database":
     st.title("📂 Student Database & Skill Passport")
-    st.write("ស្វែងរក និងគ្រប់គ្រងព័ត៌មានសិស្សតាមប្រព័ន្ធឌីជីថល")
-    st.text_input("ស្វែងរកតាមឈ្មោះ ឬលេខសម្គាល់សិស្ស...")
-    # Mock Database
+    st.text_input("Search Student ID or Name...")
     df = pd.DataFrame({
         'Student ID': ['C2-001', 'C2-002', 'C2-003'],
         'Name': ['Sokha', 'Bora', 'Davy'],
@@ -103,52 +115,58 @@ elif menu == "📂 Student Database (ទិន្នន័យសិស្ស)":
     })
     st.table(df)
 
-# --- ៣. Finance & Sales ---
-elif menu == "💰 Finance & Sales (ចំណូល/ការលក់)":
+# --- 3. Finance & Sales ---
+elif menu == "💰 Finance & Sales":
     st.title("💰 Finance & Sales Tracking")
     c1, c2 = st.columns(2)
+    
     with c1:
-        st.write("#### ការលក់សៀវភៅ GEP (Volumes)")
-        st.bar_chart(pd.DataFrame({'Sales': [150, 230, 85]}))
+        st.write("### 📊 Revenue by Source (Bar Chart)")
+        sales_df = pd.DataFrame({
+            'Source': ['Tuition', 'Books', 'Consulting'],
+            'Amount': [12000, 4500, 2000]
+        })
+        fig_bar = px.bar(sales_df, x='Source', y='Amount', color='Source',
+                         color_discrete_sequence=['#D4AF37', '#BF953F', '#AA771C'])
+        fig_bar.update_layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', font_color="#D4AF37")
+        st.plotly_chart(fig_bar, use_container_width=True)
+        
     with c2:
-        st.write("#### ចំណូលតាមប្រភេទសេវាកម្ម")
-        st.write("- ថ្លៃសិក្សា: $12,000")
-        st.write("- លក់សៀវភៅ: $4,500")
-        st.write("- ប្រឹក្សាយោបល់: $2,000")
+        st.write("### 📋 Quick Summary")
+        st.write("- **Tuition Fees:** $12,000")
+        st.write("- **Book Sales:** $4,500")
+        st.write("- **Consulting:** $2,000")
 
-# --- ៤. GEP Content ---
-elif menu == "📚 GEP Content (ផលិតកម្មមេរៀន)":
-    st.title("📚 GEP Content Management")
-    st.info("ផ្តោតលើការផលិតសៀវភៅ Volume 2 (A2) និង Volume 8-9 (Mastery)")
-    st.checkbox("រៀបចំមាតិកា Volume 2 (Completed)")
-    st.checkbox("រៀបចំមាតិកា Volume 8 (In-Progress)")
-    st.checkbox("រៀបចំមាតិកា Volume 9 (Planning)")
-    if st.button("Update Content Status"):
-        st.success("ស្ថានភាពមាតិកាត្រូវបានកត់ត្រា!")
+# --- 4. GEP Content ---
+elif menu == "📚 GEP Content":
+    st.title("📚 GEP Content Production")
+    st.info("Focusing on Volume 2 (A2) and Volume 8-9 (Mastery)")
+    st.checkbox("Content Draft: Volume 2 (Completed)")
+    st.checkbox("Content Draft: Volume 8 (In-Progress)")
+    st.checkbox("Content Draft: Volume 9 (Planning)")
+    if st.button("Save Status"):
+        st.success("Content Status Updated Successfully!")
 
-# --- ៥. AI & Automation ---
-elif menu == "🤖 AI & Automation (ប្រព័ន្ធឆ្លាតវៃ)":
+# --- 5. AI & Automation ---
+elif menu == "🤖 AI & Automation":
     st.title("🤖 AI & Automation Hub")
-    st.write("គ្រប់គ្រង Prompt និងប្រព័ន្ធឆ្លើយតបស្វ័យប្រវត្តិ")
-    st.selectbox("ជ្រើសរើស AI Agent:", ["GEP Lesson Creator", "Auto-Grader", "Customer Support Bot"])
-    st.button("Run AI Automation Process")
+    st.selectbox("Select AI Agent:", ["GEP Lesson Creator", "Auto-Grader", "Customer Support Bot"])
+    st.button("Execute AI Process")
 
-# --- ៦. Marketing & Strategy ---
-elif menu == "📈 Marketing & Strategy (យុទ្ធសាស្ត្រ)":
-    st.title("📈 Marketing & Blue Ocean Strategy")
-    st.write("យុទ្ធសាស្ត្របង្កើតទីផ្សារថ្មី និងការផ្សព្វផ្សាយ")
-    st.text_area("Blue Ocean Strategy Notes:", value="ផ្តោតលើ Early Specialization និង Medical English...")
-    st.slider("Campaign Reach", 0, 10000, 5000)
+# --- 6. Marketing & Strategy ---
+elif menu == "📈 Marketing & Strategy":
+    st.title("📈 Blue Ocean Strategy & Marketing")
+    st.text_area("Strategic Notes:", value="Focus on Early Specialization & Medical English integration.")
+    st.slider("Ad Campaign Reach", 0, 10000, 5000)
 
-# --- ៧. Certification ---
-elif menu == "📜 Certification (សញ្ញាបត្រ/កាត)":
+# --- 7. Certification ---
+elif menu == "📜 Certification":
     st.title("📜 Certification & Digital ID")
-    st.write("ចេញសញ្ញាបត្រឌីជីថលពណ៌មាស Premium")
-    st.selectbox("ជ្រើសរើសប្រភេទសញ្ញាបត្រ:", ["Flyers Master Certificate", "C2 Mastery Certificate", "Digital Student ID"])
-    if st.button("✨ បង្កើតសញ្ញាបត្រ (Generate)"):
+    st.selectbox("Certificate Type:", ["Flyers Master Certificate", "C2 Mastery Certificate", "Digital Student ID"])
+    if st.button("✨ Generate Digital Document"):
         st.balloons()
-        st.success("សញ្ញាបត្រត្រូវបានបង្កើតដោយជោគជ័យ!")
+        st.success("Premium Gold Document Generated!")
 
 # 4. Footer
 st.markdown("<br><hr>", unsafe_allow_html=True)
-st.markdown("<p style='text-align: center; color: #D4AF37;'><b>© 2026 C2-EPE ACADEMY | SYSTEM VERSION 2.0</b></p>", unsafe_allow_html=True)
+st.markdown("<p style='text-align: center; color: #D4AF37;'><b>© 2026 C2-EPE ACADEMY | SYSTEM VERSION 2.1</b></p>", unsafe_allow_html=True)
